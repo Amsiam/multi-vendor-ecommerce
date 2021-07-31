@@ -7,6 +7,7 @@ class Category(models.Model):
     parent = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=200)
+    category_thumbneil = models.ImageField(upload_to="category/thumbneil" , blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
