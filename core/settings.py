@@ -150,3 +150,6 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success",
     },
 }
+
+
+LOGOUT_REDIRECT_URL = '/admin/'
