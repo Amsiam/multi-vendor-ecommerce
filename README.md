@@ -2,10 +2,10 @@
 
 A full function Ecommerce siteby Django.
 
-# Todos
+## TODO:
 
-[x] Category
-[] Product
-[] Review
-[] account
-[] Site Details and theme
+- [x] Category
+- [x] Product
+- [ ] Review
+- [ ] account
+- [ ] Site Details and theme
