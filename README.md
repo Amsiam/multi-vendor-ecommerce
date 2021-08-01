@@ -2,7 +2,8 @@
 
 A full function Ecommerce siteby Django.
 
-#Todos
+# Todos
+
 [x] Category
 [] Product
 [] Review
