@@ -17,11 +17,18 @@ class ProductStatus(models.TextChoices):
     DRAFT = "DR", "Draft"
 
 
+class ProductType(models.TextChoices):
+    PHYSICAL = "PHY", "Physical"
+    VIRTUAL = "VIR", "Virtual"
+
+
 class Product(models.Model):
     # about product
     title = models.CharField(max_length=255)
     price = models.FloatField(default=0)
     description = models.TextField(blank=True)
+    product_type = models.CharField(
+        max_length=3, default=ProductType.PHYSICAL, choices=ProductType.choices)
     category = models.ForeignKey(
         Category, null=True, on_delete=models.SET_NULL, related_name="products")
     status = models.CharField(
@@ -45,14 +52,13 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
 
         if(not self.slug):
-            self.slug = slugify(self.title,allow_unicode=True)
+            self.slug = slugify(self.title, allow_unicode=True)
 
             while(Product.objects.filter(slug=self.slug).count()):
                 self.slug += "-"+str(len(self.slug))

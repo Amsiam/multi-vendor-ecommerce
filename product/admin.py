@@ -14,11 +14,37 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
 
     list_display = ["title", "price", "discount_price", "category",
-                    "in_stock",  "status"]
+                    "in_stock", "product_type",  "status"]
+
+    search_fields = ['title', 'slug', 'category__title']
+
+    list_filter = ("product_type", "status")
+
+    def has_change_permission(self, request, obj=None):
+        if(obj == None):
+            return False
+        if(request.user.is_authenticated):
+            if(request.user.is_superuser):
+                return True
+            else:
+                if(request.user == obj.added_by):
+                    return True
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if(obj == None):
+            return False
+        if(request.user.is_authenticated):
+            if(request.user.is_superuser):
+                return True
+            else:
+                if(request.user == obj.added_by):
+                    return True
+        return False
 
     fieldsets = (
         (None, {
-            "fields": ("title", "price", "category", "thumbnail", "description", "in_stock", "status"),
+            "fields": ("title", "price", "category", "thumbnail", "description", "in_stock", "product_type", "status"),
         }),
         ("Discount", {
             "fields": ("discount_type", "discount", "discount_start", "discount_end"),
@@ -30,6 +56,12 @@ class ProductAdmin(admin.ModelAdmin):
         if(not change):
             obj.added_by = request.user
         return super().save_model(request, obj, form, change)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if(not request.user.is_superuser):
+            queryset = queryset.filter(added_by=request.user)
+        return queryset
 
     def discount_price(self, obj):
         if(obj.discount_type == DiscountType.none):
